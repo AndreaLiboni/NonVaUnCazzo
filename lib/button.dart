@@ -12,35 +12,22 @@ class UpDownButton extends StatefulWidget {
     this.downEnable = true,
   });
   @override
-  UpDownButtonState createState() => UpDownButtonState(
-      onClickUp: onClickUp,
-      upEnable: upEnable,
-      onClickDown: onClickDown,
-      downEnable: downEnable);
+  _UpDownButtonState createState() => _UpDownButtonState();
 }
 
-class UpDownButtonState extends State<UpDownButton> {
-  final bool upEnable, downEnable;
-  final Function onClickUp, onClickDown;
-  UpDownButtonState({
-    required this.onClickUp,
-    this.upEnable = true,
-    required this.onClickDown,
-    this.downEnable = true,
-  });
-
+class _UpDownButtonState extends State<UpDownButton> {
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         TextButton(
-          onPressed: upEnable ? () => (onClickUp()) : null,
+          onPressed: widget.upEnable ? () => (widget.onClickUp()) : null,
           style: ButtonStyle(
               elevation: MaterialStateProperty.all<double>(6),
               padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                   const EdgeInsets.all(4)),
               backgroundColor: MaterialStateProperty.all<Color>(
-                  upEnable ? Colors.orange : Colors.grey),
+                  widget.upEnable ? Colors.orange : Colors.grey),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   const RoundedRectangleBorder(
                       borderRadius:
@@ -53,13 +40,13 @@ class UpDownButtonState extends State<UpDownButton> {
           ),
         ),
         TextButton(
-            onPressed: downEnable ? () => (onClickDown()) : null,
+            onPressed: widget.downEnable ? () => (widget.onClickDown()) : null,
             style: ButtonStyle(
                 elevation: MaterialStateProperty.all<double>(6),
                 padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                     const EdgeInsets.all(4)),
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    downEnable ? Colors.orange : Colors.grey),
+                    widget.downEnable ? Colors.orange : Colors.grey),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     const RoundedRectangleBorder(
                         borderRadius: BorderRadius.horizontal(

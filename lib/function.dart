@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class Utils {
   final String url =
-      "https://advertising-catalyst-fur-dramatically.trycloudflare.com";
+      "https://converter-backed-campaign-equity.trycloudflare.com/";
 
   Future<http.Response> up(String name) {
     return http.post(

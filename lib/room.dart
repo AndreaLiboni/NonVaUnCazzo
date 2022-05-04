@@ -11,59 +11,67 @@ class Room extends StatefulWidget {
   final int ID;
   const Room({required this.ID});
   @override
-  _MyState createState() => _MyState();
+  _RoomState createState() => _RoomState();
 }
 
-class _MyState extends State<Room> {
+class _RoomState extends State<Room> {
   String? doorStatus, windStatus;
   late String roomName;
-  late FutureBuilder doorStatusWidget;
-  late FutureBuilder windStatusWidget;
+  // late FutureBuilder doorStatusWidget;
+  // late FutureBuilder windStatusWidget;
 
   @override
   void initState() {
     roomName = (widget.ID == 0) ? "Cucina" : "Sala";
-    doorStatusWidget = status(1, widget.ID);
-    windStatusWidget = status(2, widget.ID);
+    getInitState();
     super.initState();
   }
 
-  FutureBuilder<String> status(int ID, int room) {
-    return FutureBuilder<String>(
-      future: Utils().status((ID + room).toString()),
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<String> snapshot,
-      ) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (ID == 1) {
-            Future.delayed(Duration.zero, () async {
-              setState(() {
-                doorStatus = snapshot.data;
-              });
-            });
-          } else {
-            windStatus = snapshot.data;
-          }
-          return Components().tappStatus(snapshot.data);
-        } else if (snapshot.hasError) {
-          return const Icon(
-            Icons.error,
-            color: Colors.red,
-            size: 100,
-          );
-        }
-        return const SizedBox(
-          child: SpinKitThreeInOut(
-            color: Colors.grey,
-            size: 50,
-          ),
-          width: 135,
-          height: 135,
-        );
-      },
-    );
+  void getInitState() {
+    Utils()
+        .status((1 + widget.ID).toString())
+        .then((value) => setState(() => doorStatus = value));
+    Utils()
+        .status((2 + widget.ID).toString())
+        .then((value) => setState(() => windStatus = value));
   }
+
+  // FutureBuilder<String> status(int ID, int room) {
+  //   return FutureBuilder<String>(
+  //     future: Utils().status((ID + room).toString()),
+  //     builder: (
+  //       BuildContext context,
+  //       AsyncSnapshot<String> snapshot,
+  //     ) {
+  //       if (snapshot.connectionState == ConnectionState.done) {
+  //         if (ID == 1) {
+  //           Future.delayed(Duration.zero, () async {
+  //             setState(() {
+  //               doorStatus = snapshot.data;
+  //             });
+  //           });
+  //         } else {
+  //           windStatus = snapshot.data;
+  //         }
+  //         return Components().tappStatus(snapshot.data);
+  //       } else if (snapshot.hasError) {
+  //         return const Icon(
+  //           Icons.error,
+  //           color: Colors.red,
+  //           size: 100,
+  //         );
+  //       }
+  //       return const SizedBox(
+  //         child: SpinKitThreeInOut(
+  //           color: Colors.grey,
+  //           size: 50,
+  //         ),
+  //         width: 135,
+  //         height: 135,
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -86,16 +94,41 @@ class _MyState extends State<Room> {
                     "Porta",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
                   ),
-                  doorStatusWidget,
+                  if (doorStatus == null)
+                    const SizedBox(
+                      child: SpinKitThreeInOut(
+                        color: Colors.grey,
+                        size: 50,
+                      ),
+                      width: 135,
+                      height: 135,
+                    )
+                  else
+                    Components().tappStatus(doorStatus),
                   UpDownButton(
-                      upEnable: !(doorStatus == 'up'),
-                      onClickUp: () => Utils()
+                    upEnable: !(doorStatus == 'up'),
+                    downEnable: !(doorStatus == 'down'),
+                    onClickUp: () {
+                      Utils()
                           .up((1 + widget.ID).toString())
                           .then((value) => update(value))
-                          .then((value) => setState(() {})),
-                      onClickDown: () => Utils()
+                          .whenComplete(() {
+                        setState(() => doorStatus = null);
+                        Utils().status((1 + widget.ID).toString()).then(
+                            (value) => setState(() => doorStatus = value));
+                      });
+                    },
+                    onClickDown: () {
+                      Utils()
                           .down((1 + widget.ID).toString())
-                          .then((value) => update(value))),
+                          .then((value) => update(value))
+                          .whenComplete(() {
+                        setState(() => doorStatus = null);
+                        Utils().status((1 + widget.ID).toString()).then(
+                            (value) => setState(() => doorStatus = value));
+                      });
+                    },
+                  ),
                 ],
               ),
               margin: const EdgeInsets.all(30),
@@ -108,14 +141,41 @@ class _MyState extends State<Room> {
                     "Finestra",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
                   ),
-                  windStatusWidget,
+                  if (windStatus == null)
+                    const SizedBox(
+                      child: const SpinKitThreeInOut(
+                        color: Colors.grey,
+                        size: 50,
+                      ),
+                      width: 135,
+                      height: 135,
+                    )
+                  else
+                    Components().tappStatus(windStatus),
                   UpDownButton(
-                      onClickUp: () => Utils()
+                    upEnable: !(windStatus == 'up'),
+                    downEnable: !(windStatus == 'down'),
+                    onClickUp: () {
+                      Utils()
                           .up((2 + widget.ID).toString())
-                          .then((value) => update(value)),
-                      onClickDown: () => Utils()
+                          .then((value) => update(value))
+                          .whenComplete(() {
+                        setState(() => windStatus = null);
+                        Utils().status((2 + widget.ID).toString()).then(
+                                (value) => setState(() => windStatus = value));
+                      });
+                    },
+                    onClickDown: () {
+                      Utils()
                           .down((2 + widget.ID).toString())
-                          .then((value) => update(value))),
+                          .then((value) => update(value))
+                          .whenComplete(() {
+                        setState(() => windStatus = null);
+                        Utils().status((2 + widget.ID).toString()).then(
+                                (value) => setState(() => windStatus = value));
+                      });
+                    },
+                  ),
                 ],
               ),
               margin: const EdgeInsets.all(30),
