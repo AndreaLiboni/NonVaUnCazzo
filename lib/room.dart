@@ -17,8 +17,7 @@ class Room extends StatefulWidget {
 class _RoomState extends State<Room> {
   String? doorStatus, windStatus;
   late String roomName;
-  // late FutureBuilder doorStatusWidget;
-  // late FutureBuilder windStatusWidget;
+  late Utils webFunc;
 
   @override
   void initState() {
@@ -28,53 +27,17 @@ class _RoomState extends State<Room> {
   }
 
   void getInitState() {
-    Utils()
+    webFunc
         .status((1 + widget.ID).toString())
         .then((value) => setState(() => doorStatus = value));
-    Utils()
+    webFunc
         .status((2 + widget.ID).toString())
         .then((value) => setState(() => windStatus = value));
   }
 
-  // FutureBuilder<String> status(int ID, int room) {
-  //   return FutureBuilder<String>(
-  //     future: Utils().status((ID + room).toString()),
-  //     builder: (
-  //       BuildContext context,
-  //       AsyncSnapshot<String> snapshot,
-  //     ) {
-  //       if (snapshot.connectionState == ConnectionState.done) {
-  //         if (ID == 1) {
-  //           Future.delayed(Duration.zero, () async {
-  //             setState(() {
-  //               doorStatus = snapshot.data;
-  //             });
-  //           });
-  //         } else {
-  //           windStatus = snapshot.data;
-  //         }
-  //         return Components().tappStatus(snapshot.data);
-  //       } else if (snapshot.hasError) {
-  //         return const Icon(
-  //           Icons.error,
-  //           color: Colors.red,
-  //           size: 100,
-  //         );
-  //       }
-  //       return const SizedBox(
-  //         child: SpinKitThreeInOut(
-  //           color: Colors.grey,
-  //           size: 50,
-  //         ),
-  //         width: 135,
-  //         height: 135,
-  //       );
-  //     },
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
+    webFunc = Utils();
     void update(http.Response response) {
       if (response.statusCode == 200) {
         setState(() {});
@@ -84,7 +47,6 @@ class _RoomState extends State<Room> {
     return Scaffold(
       appBar: Components().navBar(roomName),
       body: LayoutBuilder(builder: (context, constraints) {
-        print(doorStatus);
         return Row(
           children: [
             Container(
@@ -109,22 +71,22 @@ class _RoomState extends State<Room> {
                     upEnable: !(doorStatus == 'up'),
                     downEnable: !(doorStatus == 'down'),
                     onClickUp: () {
-                      Utils()
+                      webFunc
                           .up((1 + widget.ID).toString())
                           .then((value) => update(value))
                           .whenComplete(() {
                         setState(() => doorStatus = null);
-                        Utils().status((1 + widget.ID).toString()).then(
+                        webFunc.status((1 + widget.ID).toString()).then(
                             (value) => setState(() => doorStatus = value));
                       });
                     },
                     onClickDown: () {
-                      Utils()
+                      webFunc
                           .down((1 + widget.ID).toString())
                           .then((value) => update(value))
                           .whenComplete(() {
                         setState(() => doorStatus = null);
-                        Utils().status((1 + widget.ID).toString()).then(
+                        webFunc.status((1 + widget.ID).toString()).then(
                             (value) => setState(() => doorStatus = value));
                       });
                     },
@@ -156,23 +118,23 @@ class _RoomState extends State<Room> {
                     upEnable: !(windStatus == 'up'),
                     downEnable: !(windStatus == 'down'),
                     onClickUp: () {
-                      Utils()
+                      webFunc
                           .up((2 + widget.ID).toString())
                           .then((value) => update(value))
                           .whenComplete(() {
                         setState(() => windStatus = null);
-                        Utils().status((2 + widget.ID).toString()).then(
-                                (value) => setState(() => windStatus = value));
+                        webFunc.status((2 + widget.ID).toString()).then(
+                            (value) => setState(() => windStatus = value));
                       });
                     },
                     onClickDown: () {
-                      Utils()
+                      webFunc
                           .down((2 + widget.ID).toString())
                           .then((value) => update(value))
                           .whenComplete(() {
                         setState(() => windStatus = null);
-                        Utils().status((2 + widget.ID).toString()).then(
-                                (value) => setState(() => windStatus = value));
+                        webFunc.status((2 + widget.ID).toString()).then(
+                            (value) => setState(() => windStatus = value));
                       });
                     },
                   ),

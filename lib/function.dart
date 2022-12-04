@@ -2,8 +2,19 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Utils {
-  final String url =
-      "https://converter-backed-campaign-equity.trycloudflare.com/";
+  String url = "";
+
+  Utils() {
+    getUrl();
+  }
+
+  void getUrl() async {
+    http.Response response = await http.get(
+      Uri.parse("http://isitidiandrea.altervista.org/tapparelle"),
+    );
+    //qui mi salvo il link a cui fare le richieste
+    url = response.body;
+  }
 
   Future<http.Response> up(String name) {
     return http.post(
@@ -30,6 +41,7 @@ class Utils {
   }
 
   Future<String> status(String name) async {
+    //qui da errore perchè la stringa url è ancora vuota
     final requ = await http.post(
       Uri.parse(url + "/status/" + name),
       headers: <String, String>{

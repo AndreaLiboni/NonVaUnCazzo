@@ -12,9 +12,12 @@ class spli_body extends StatefulWidget {
 }
 
 class _MyState extends State<spli_body> {
+  late Utils
+      webFunc; //costruttore per fare le richieste web (inizializzato nel metodo build)
+
   FutureBuilder<String> status(String name) {
     return FutureBuilder(
-      future: Utils().status(name),
+      future: webFunc.status(name),
       builder: (
         BuildContext context,
         AsyncSnapshot<String> snapshot,
@@ -43,6 +46,7 @@ class _MyState extends State<spli_body> {
 
   @override
   Widget build(BuildContext context) {
+    webFunc = Utils();
     return Scaffold(
         body: Column(children: [
       Container(
@@ -62,8 +66,8 @@ class _MyState extends State<spli_body> {
               children: [
                 const Spacer(),
                 UpDownButton(
-                    onClickUp: () => Utils().up("home"),
-                    onClickDown: () => Utils().down("home")),
+                    onClickUp: () => webFunc.up("home"),
+                    onClickDown: () => webFunc.down("home")),
                 const Spacer(),
               ],
             ),
@@ -91,8 +95,8 @@ class _MyState extends State<spli_body> {
                   iconSize: 120,
                 ),
                 UpDownButton(
-                    onClickUp: () => Utils().up("kitchen"),
-                    onClickDown: () => Utils().down("kitchen")),
+                    onClickUp: () => webFunc.up("kitchen"),
+                    onClickDown: () => webFunc.down("kitchen")),
                 status("kitchen"),
               ],
             ),
@@ -113,8 +117,8 @@ class _MyState extends State<spli_body> {
                   iconSize: 120,
                 ),
                 UpDownButton(
-                    onClickUp: () => Utils().up("livingroom"),
-                    onClickDown: () => Utils().down("livingroom")),
+                    onClickUp: () => webFunc.up("livingroom"),
+                    onClickDown: () => webFunc.down("livingroom")),
                 status("livingroom"),
               ],
             ),

@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:tapparelle/splitBody.dart';
-import 'package:tapparelle/room.dart';
 import 'package:tapparelle/components.dart';
 import 'package:tapparelle/routeGenerator.dart';
 
