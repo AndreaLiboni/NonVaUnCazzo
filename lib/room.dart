@@ -16,14 +16,15 @@ class Room extends StatefulWidget {
 
 class _RoomState extends State<Room> {
   String? doorStatus, windStatus;
-  late String roomName;
-  late Utils webFunc;
+  String roomName = '';
+  Utils webFunc = Utils();
 
   @override
   void initState() {
-    webFunc = Utils();
-    roomName = (widget.ID == 0) ? "Cucina" : "Sala";
-    getInitState();
+    webFunc.updateUrl().then((u) => webFunc = u).whenComplete(() {
+      roomName = (widget.ID == 0) ? "Cucina" : "Sala";
+      getInitState();
+    });
     super.initState();
   }
 
@@ -77,7 +78,7 @@ class _RoomState extends State<Room> {
                           .whenComplete(() {
                         setState(() => doorStatus = null);
                         webFunc.status((1 + widget.ID).toString()).then(
-                            (value) => setState(() => doorStatus = value));
+                                (value) => setState(() => doorStatus = value));
                       });
                     },
                     onClickDown: () {
@@ -87,7 +88,7 @@ class _RoomState extends State<Room> {
                           .whenComplete(() {
                         setState(() => doorStatus = null);
                         webFunc.status((1 + widget.ID).toString()).then(
-                            (value) => setState(() => doorStatus = value));
+                                (value) => setState(() => doorStatus = value));
                       });
                     },
                   ),
@@ -124,7 +125,7 @@ class _RoomState extends State<Room> {
                           .whenComplete(() {
                         setState(() => windStatus = null);
                         webFunc.status((2 + widget.ID).toString()).then(
-                            (value) => setState(() => windStatus = value));
+                                (value) => setState(() => windStatus = value));
                       });
                     },
                     onClickDown: () {
@@ -134,7 +135,7 @@ class _RoomState extends State<Room> {
                           .whenComplete(() {
                         setState(() => windStatus = null);
                         webFunc.status((2 + widget.ID).toString()).then(
-                            (value) => setState(() => windStatus = value));
+                                (value) => setState(() => windStatus = value));
                       });
                     },
                   ),
