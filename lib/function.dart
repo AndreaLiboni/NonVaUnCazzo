@@ -2,18 +2,20 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Utils {
-  String url = "";
+  const Utils({
+    this.url =
+        '', // inizializzo il parametro url nel costrutto con valore default
+  });
 
-  Utils() {
-    getUrl();
-  }
+  final String url;
 
-  void getUrl() async {
+  Future<Utils> updateUrl() async {
+    //creo un nuovo oggetto utils con il parametro url aggiornato
     http.Response response = await http.get(
       Uri.parse("http://isitidiandrea.altervista.org/tapparelle"),
     );
-    //qui mi salvo il link a cui fare le richieste
-    url = response.body;
+
+    return Utils(url: response.body);
   }
 
   Future<http.Response> up(String name) {

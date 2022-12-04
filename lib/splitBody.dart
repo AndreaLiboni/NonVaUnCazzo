@@ -12,8 +12,15 @@ class spli_body extends StatefulWidget {
 }
 
 class _MyState extends State<spli_body> {
-  late Utils
-      webFunc; //costruttore per fare le richieste web (inizializzato nel metodo build)
+  //late Utils webFunc; // dichiaro webFunc
+  Utils webFunc = Utils(); // se non funziona quello sopra usa questo
+
+  @override
+  initState() {
+    //sovrascrivo l'initState
+    webFunc.updateUrl().then((u) =>
+        webFunc = u); //ora prima di caricare la grafica inizializza webFunc
+  }
 
   FutureBuilder<String> status(String name) {
     return FutureBuilder(
@@ -46,7 +53,6 @@ class _MyState extends State<spli_body> {
 
   @override
   Widget build(BuildContext context) {
-    webFunc = Utils();
     return Scaffold(
         body: Column(children: [
       Container(

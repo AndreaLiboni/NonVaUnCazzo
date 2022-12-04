@@ -21,6 +21,7 @@ class _RoomState extends State<Room> {
 
   @override
   void initState() {
+    webFunc = Utils();
     roomName = (widget.ID == 0) ? "Cucina" : "Sala";
     getInitState();
     super.initState();
@@ -37,7 +38,6 @@ class _RoomState extends State<Room> {
 
   @override
   Widget build(BuildContext context) {
-    webFunc = Utils();
     void update(http.Response response) {
       if (response.statusCode == 200) {
         setState(() {});
